@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+	
+	<delete id="delete">
+	delete from bUser where user_email = #{user_email}
+	</delete>
+	
+	<insert id="signup">
+	insert into bUser (user_email, user_pw, user_nickname, user_phone, 
+			user_zipcode, user_address, detail_address, user_birth, user_key)
+	values (#{user_email}, #{user_pw}, #{user_nickname}, #{user_phone}, 
+			#{user_zipcode}, #{user_address}, #{detail_address}, #{user_birth}, #{user_key})
+	</insert>
+	
+	<select id="email_check" resultType="Integer">
+	select count(*) from bUser where user_email = #{user_email}
+	</select>
+	
+	<select id="login" resultType="UserVO">
+	select * from bUser
+	where user_email = #{user_email} and user_pw = #{user_pw}
+	</select>
+
+	<select id="pwcheck" resultType="UserVO">
+	select * from bUser
+	where user_email = #{user_email} and user_nickname = #{user_nickname}
+	</select>
+
+	<select id="detail" resultType="UserVO">
+	select * from bUser
+	where user_email = #{user_email}
+	</select>
+
+	<update id="imageUpload">
+	update bUser
+	set user_image = #{user_image}, user_imagepath = #{user_imagepath}
+	where user_email = #{user_email}
+	</update>
+	
+	<update id="update">
+	update buser
+	set user_pw=#{user_pw}, user_nickname=#{user_nickname}, user_phone=#{user_phone}, user_zipcode=#{user_zipcode}, user_address=#{user_address}, detail_address=#{detail_address}, user_birth=#{user_birth} 
+	where user_email=#{user_email}
+	</update>
+	
+	<select id="list" resultType="UserVO">
+	select rownum user_num, u.* from 
+	(select * from bUser order by user_nickname) u
+	</select>
+
+</mapper>

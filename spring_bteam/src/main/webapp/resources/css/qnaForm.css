@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+.contents td {
+	padding : 0px;
+	border: 0px;
+}
+
+.myContent {
+    text-align: right;
+}
+
+#content a:hover {
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.answers {
+    background-color: #f0f0f0;
+    text-align: left;
+    padding: 10px 75px;
+    height: 100%;
+}
+
+#email_reply {
+	font-size: 13px;
+	height: 30px;
+	border : 1px solid;
+	background-color: white;
+}
+
+h5 {
+	text-align: left;
+	margin: 10px 0px;
+	color: gray;
+}
+
+#wrap p {
+	margin: 10px 0px;
+}
+
+.pageName p.titleName{margin-top: 54px;}
+

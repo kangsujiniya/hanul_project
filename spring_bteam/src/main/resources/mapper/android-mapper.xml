@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="android">
+	<insert id="signup">
+		insert into bUser (user_email, user_pw, user_nickname, user_phone,
+		user_zipcode, user_address, detail_address, user_birth, user_key)
+		values (#{user_email}, #{user_pw}, #{user_nickname}, #{user_phone},
+		#{user_zipcode}, #{user_address}, #{detail_address}, 
+		#{user_birth}, #{user_key})
+	</insert>
+
+	<select id="boardList" resultType="BoardVO">
+		select rownum, n.* 
+		from ( select * from bBoard 
+			   where board_category = #{category} 
+			   order by board_num desc ) n
+		where rownum between #{begin} and #{end}
+	</select>
+	
+	<select id="trafficList" resultType="com.project.bteam.android.TrafficVO">
+		select rownum, n.*
+		from ( select * from traffic
+			   order by tra_num desc ) n
+		where rownum between #{begin} and #{end}
+	</select>
+	
+	<select id="trafficView" resultType="com.project.bteam.android.TrafficVO">
+		select * from traffic
+		where tra_num = #{num}
+	</select>
+	
+	<insert id="trafficInsert">
+		insert into traffic (tra_user_email, tra_username, tra_user_image,
+		tra_content, tra_content_image)
+		values (#{tra_user_email}, #{tra_username}, #{tra_user_image, jdbcType=VARCHAR},
+		#{tra_content}, #{tra_content_image, jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="getImage" resultType="String">
+		select user_imagepath
+		from bUser
+		where user_email = #{email}
+	</select>
+	
+	<select id="myPost" resultType="com.project.bteam.android.TrafficVO">
+		select rownum, n.*
+		from ( select * from traffic
+			   where tra_user_email = #{email}
+			   order by tra_num desc ) n
+		where rownum between #{begin} and #{end}
+	</select>
+	
+	<select id="popular" resultType="com.project.bteam.android.TrafficVO">
+		select rownum, t.* from (
+		    select t.*, l.tra_like 
+		    from traffic t, ( select like_board, count(like_id) tra_like
+		                      from traffic_like
+		                      group by like_board ) l
+		    where t.tra_num = l.like_board(+)
+		    and t.tra_solve = 0
+		    order by l.tra_like asc, t.tra_readcount desc ) t
+		where rownum between 1 and 3
+	</select>
+	
+	<update id="readCount">
+		update traffic
+		set tra_readcount = tra_readcount + 1
+		where tra_num = #{num}
+	</update>
+	
+	<update id="trafficModify">
+		update traffic
+		set tra_content = #{tra_content},
+		tra_content_image = #{tra_content_image, jdbcType=VARCHAR}
+		where tra_num = #{tra_num}
+	</update>
+	
+	<delete id="trafficDelete">
+		delete from traffic
+		where tra_num = #{num}
+	</delete>
+	
+	<select id="emailCheck" resultType="Integer">
+		select count(rownum) from bUser
+		where user_email = #{email}
+	</select>
+	
+	<update id="verifyEmail">
+		update bUser
+		set user_key = 'OK'
+		where user_email = #{email}
+	</update>
+	
+	<update id="updateUser">
+		update bUser
+		set user_nickname = #{user_nickname}, user_phone = #{user_phone},
+		user_address = #{user_address}, user_birth = #{user_birth}
+		where user_email = #{user_email}
+	</update>
+	
+	<update id="trafficSolve">
+		update traffic
+		set tra_solve = 1
+		where tra_num = #{num}
+	</update>
+	
+	<select id="trafficLikeSu" resultType="Integer">
+		select count(like_id) from traffic_like
+		where like_board = #{num}
+	</select>
+	
+	<select id="trafficLikeSelect" resultType="Integer">
+		select count(like_id) from traffic_like
+		where like_email = #{email}
+		and like_board = #{num}
+	</select>
+	
+	<insert id="trafficLikeInsert">
+		insert into traffic_like (like_email, like_board)
+		values (#{email}, #{num})
+	</insert>
+	
+	<delete id="trafficLikeDelete">
+		delete from traffic_like
+		where like_email = #{email} and like_board = #{num}
+	</delete>
+	
+	<select id="commentList" resultType="com.project.bteam.android.CommentVO">
+		select * from traffic_comment
+		order by comment_id desc
+	</select>
+	
+	<insert id="commentInsert">
+		insert into traffic_comment (comment_board, comment_email, 
+		comment_image, comment_content)
+		values (#{comment_board}, #{comment_email}, #{comment_image}, 
+		#{comment_content})
+	</insert>
+	
+	<delete id="commentDelete">
+		delete from traffic_comment
+		where comment_id = #{num}
+	</delete>
+	
+	<update id="commentUpdate">
+		update traffic_comment
+		set comment_content = #{comment_content}
+		where comment_id = #{comment_id}
+	</update>
+</mapper>

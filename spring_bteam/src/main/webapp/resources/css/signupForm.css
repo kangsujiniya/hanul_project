@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+#wrap {	margin: 50px auto;	border: 1px solid #ccc; padding: 50px 0px 0px;}
+
+h2 {	text-align: center;	margin-bottom: 50px;}
+
+table {	margin: 0 auto;}
+table tr th img {	width: 30px;	height: 30px;}
+table tr {	margin: 5px 0px;}
+table tr td input {	border: none;	box-shadow: 1px 1px 1px 2px #ccc;	height: 35px;	width: 300px;	padding-left: 5px;}
+table tr:nth-child(5) td input:first-child {	width: 100px;}
+table tr:nth-child(5) td input:first-child a {	margin-bottom: 1px;}
+table tr th {	vertical-align: top;	padding: 5px;}
+table a.msg {	height: 25px;	padding: 5px;	border-radius: 3px;	font-size: 12px;	float: right;	font-weight: bolder;}
+
+#wrap a:hover, #buttons input:hover {	cursor: pointer;}
+
+/* #buttons {	margin: 0 auto;	margin-top: 50px;	width: 350px;} */
+/* #buttons a { display: block; text-align: center; line-height: 40px;	margin: 0 auto;	height: 40px; width: 350px; */
+/* 			 border: none;	border-radius: 5px;		color: white;} */
+/* #buttons a:first-child {	margin-bottom: 10px;	background-color: #F8AA34;} */
+
+#buttons{   width: 500px;   margin: 60px auto 45px;}
+#buttons a{ width: 400px;    height: 45px;    font-size: 15px;    border: none;    border-radius: 5px;    margin: 0 auto;
+    		color: white;    display: block;   text-align: center;    line-height: 45px;}
+.button{	background-color: #F8AA34; }
+.reset {	background-color: #8a8a8a;}

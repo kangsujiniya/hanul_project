@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+	
+	<update id="update">
+	update bBoard set board_title=#{board_title}, board_content=#{board_content}, board_filename=#{board_filename, jdbcType=VARCHAR}, board_filepath= #{board_filepath, jdbcType=VARCHAR}
+	where board_num=#{board_num}
+	</update>
+	
+	<delete id="delete">
+	delete from bBoard where board_num = #{board_num}
+	</delete>
+	
+	<insert id="write">
+	insert into bBoard (board_num, board_category, board_email, board_nickname, board_date, board_title, board_content, board_filename, board_filepath)
+	values ((select NVL(MAX(board_num), 0) + 1 from bBoard), #{board_category}, #{board_email}, #{board_nickname}, to_date(sysdate, 'yy/mm/dd'), #{board_title}, #{board_content}, #{board_filename, jdbcType=VARCHAR}, #{board_filepath, jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="view" resultType="BoardVO">
+	select * from bBoard 
+	where board_num=#{board_num}
+	</select>
+	
+	<update id="readcount">
+	update bBoard set board_readcnt = board_readcnt+1 where board_num=#{board_num}
+	</update>
+		
+	<select id="total" resultType="Integer">
+	select count(*)
+	from bBoard
+	where board_category = #{board_category} <include refid="search_where" />
+	</select>
+	
+	<select id="list" resultType="BoardVO">
+	select b.* from
+		(select rownum board_no, b.* from 
+			(select * from bBoard where board_category=#{board_category} <include refid="search_where" /> order by board_num) b
+		order by board_no desc) b
+	where board_no between #{beginList} and #{endList}
+	</select>
+	
+<!-- 	<select id="total" resultType="Integer"> -->
+<!-- 	select count(*) -->
+<!-- 	from bBoard -->
+<!-- 	where board_category = #{board_category} <include refid="search_where" /> -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="list" resultType="BoardVO"> -->
+<!-- 	select b.* from -->
+<!-- 	(select rownum board_no, b.* from (select * from bBoard where board_category=#{board_category} <include refid="search_where" /> order by board_num) b -->
+<!-- 	order by board_no desc) b -->
+<!-- 	where board_no between #{beginList} and #{endList} -->
+<!-- 	</select> -->
+	
+	<sql id="search_where">
+	<if test="search=='board_title' or search=='board_content'">
+	   and ${search} like '%' || #{keyword} || '%'
+	</if>
+	<if test="search=='board_nickname'">
+<!--   and board_email in (select user_email from bUser where user_nickname like '%' || #{keyword} || '%') -->
+	   and board_nickname like '%' || #{keyword} || '%'
+	</if>
+	
+	<if test="search=='all'">
+	   and (board_title like '%' || #{keyword} || '%'
+	   or board_content like '%' || #{keyword} || '%'
+	   or board_nickname like '%' || #{keyword} || '%')
+<!-- 	   or board_email in -->
+<!-- 	   (select user_email from bUser where user_nickname like '%' || #{keyword} || '%') -->
+	</if>
+	</sql>
+	
+</mapper>
